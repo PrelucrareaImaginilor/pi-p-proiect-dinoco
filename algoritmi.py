@@ -23,4 +23,43 @@ def filtrumedie(img, n=3):
 
 
 
-def filtrusobel(img)
+def filtrusobel(img):
+    img_gray = img.convert("L")
+    img_array = np.array(img_gray)
+
+    sobel_x = np.array([[-1, 0, 1],
+                        [-2, 0, 2],
+                        [-1, 0, 1]])
+
+    sobel_y = np.array([[-1, -2, -1],
+                        [0, 0, 0],
+                        [1, 2, 1]])
+
+    height, width = img_array.shape
+
+    filtered_img_array = np.zeros_like(img_array)
+
+    for i in range(1, width - 1):
+        for j in range(1, height - 1):
+            a=0
+            b=0
+            for k in range (-1,1):
+                for l in range (-1,1):
+                    
+            # Calculăm gradienții folosind filtrele Sobel
+            grad_x = np.sum(region * sobel_x)
+            grad_y = np.sum(region * sobel_y)
+
+            # Calculăm magnitudinea gradientului
+            magnitude = np.sqrt(grad_x ** 2 + grad_y ** 2)
+
+            # Valoarea pixelului în imaginea finală
+            filtered_img_array[j, i] = magnitude
+
+    # Normalizăm imaginea la intervalul [0, 255]
+    filtered_img_array = np.clip(filtered_img_array, 0, 255)
+
+    # Convertim înapoi la imagine
+    img_filtered = Image.fromarray(filtered_img_array.astype(np.uint8))
+
+    return img_filtered
