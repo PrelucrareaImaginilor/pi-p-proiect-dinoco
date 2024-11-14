@@ -3,7 +3,7 @@ from tkinter import filedialog
 from PIL import Image, ImageTk
 import numpy as np
 
-# Variabile globale pentru imagine și factorul de zoom
+# Variabile globale pentru imagine si factorul de zoom
 
 start_x = 0
 start_y = 0
@@ -19,7 +19,7 @@ label_height_max = 300
 
 options = ["Alg1", "Alg2", "Alg3", "Alg4"]
 
-# Variabile pentru mișcarea imaginii
+# Variabile pentru miscarea imaginii
 img_offset_x = 0
 img_offset_y = 0
 
@@ -54,19 +54,19 @@ def apply_action(panel):
         label_img2.pack(side=tk.RIGHT, anchor=tk.N, padx=10, pady=10)
 
 
-# Funcție pentru a încărca imaginea
+# Functie pentru a incarca imaginea
 def load_action(panel):
     global image, image_tk, label_image, zoom_fact, image_resized, image_width, height, width
-    # Afișează un dialog pentru a selecta fișierul
-    file_path = filedialog.askopenfilename(title="Selectează o imagine",
+    # Afiseaza un dialog pentru a selecta fisierul
+    file_path = filedialog.askopenfilename(title="Selecteaza o imagine",
                                            filetypes=[("Image Files", "*.jpg;*.jpeg;*.png;*.gif;*.bmp")])
     if file_path:
-        # Încarcă imaginea
+        # Incarca imaginea
         image = Image.open(file_path)
 
-        zoom_fact = 1.0  # Resetează factorul de zoom la 1 (normal)
+        zoom_fact = 1.0  # Reseteaza factorul de zoom la 1 (normal)
         image_resized = image
-        # Redimensionează imaginea pentru a se potrivi inițial în label
+        # Redimensioneaza imaginea pentru a se potrivi initial in label
         image_resized = image.resize((label_width_max, int(image.height * (label_width_max / image.width))))
         if image_resized.height > label_height_max:
             image_resized = image_resized.resize(
@@ -74,7 +74,7 @@ def load_action(panel):
         width = image_resized.width
         height = image_resized.height
         image_resized = image.resize((image_resized.width, image_resized.height))
-        # Convertește imaginea în format compatibil Tkinter
+        # Convertește imaginea in format compatibil Tkinter
         image_tk = ImageTk.PhotoImage(image_resized)
 
         if label_image is not None:
@@ -83,18 +83,18 @@ def load_action(panel):
         label_image = tk.Label(panel, width=label_width_max, height=label_height_max,
                                highlightbackground="black", highlightthickness=0)
 
-        # Setează imaginea pe label
+        # Seteaza imaginea pe label
         label_image.config(image=image_tk)
-        label_image.image = image_tk  # Păstrează referința
+        label_image.image = image_tk  # Pastreaza referinta
 
         label_image.pack(side=tk.LEFT, anchor=tk.N, padx=10, pady=10)
 
-        # Conectează evenimentele de mișcare la label
+        # Conecteaza evenimentele de miscare la label
         label_image.bind("<Button-1>", start_move)
         label_image.bind("<B1-Motion>", move_image_call)
 
 
-# Funcție de zoom
+# Functie de zoom
 def zoom(event):
     global image, image_tk, zoom_fact, label_image, img_resized, width, height, img2, img_tk2, img_resized2
     if image:
@@ -122,7 +122,7 @@ def zoom(event):
         label_img2.image = img_tk2
 
 
-# Funcția de start pentru drag
+# Functia de start pentru drag
 def start_move(event):
     global start_x, start_y
     start_x = event.x
@@ -136,40 +136,40 @@ def move_image_call(event):
         move_image(event, img2, img_tk2, label_img2, img_resized2)
 
 
-# Funcția de mișcare a imaginii, cu suport pentru zoom și aplicare pe ambele imagini
+# Functia de miscare a imaginii, cu suport pentru zoom si aplicare pe ambele imagini
 def move_image(event, img, img_tk, label_img, img_resized):
     global img_offset_x, img_offset_y, start_x, start_y
     if img_resized is None:
         img_resized = img.resize((int(width * zoom_fact), int(height * zoom_fact)), Image.NEAREST)
     if img:
-        # Calculăm diferența față de poziția inițială
+        # Calculam diferenta fata de pozitia initiala
         dx = event.x - start_x
         dy = event.y - start_y
 
-        # Actualizăm coordonatele de offset ale imaginii
+        # Actualizam coordonatele de offset ale imaginii
         img_offset_x -= dx
         img_offset_y -= dy
 
-        # Transformăm imaginea pentru a reflecta noua poziție
+        # Transformam imaginea pentru a reflecta noua pozitie
         img_moved = img_resized.copy()
         img_moved = img_moved.transform(
             (img_resized.width, img_resized.height),
             Image.AFFINE,
             (1, 0, img_offset_x, 0, 1, img_offset_y),
-            fillcolor="white"  # pentru a umple marginile cu alb sau altă culoare
+            fillcolor="white"  # pentru a umple marginile cu alb sau alta culoare
         )
 
-        # Actualizăm imaginea afișată
+        # Actualizam imaginea afisata
         img_tk = ImageTk.PhotoImage(img_moved)
         label_img.config(image=img_tk)
         label_img.image = img_tk
 
-        # Actualizăm coordonatele de început pentru mișcarea continuă
+        # Actualizam coordonatele de inceput pentru miscarea continua
         start_x = event.x
         start_y = event.y
 
 
-# Interfața principală
+# Interfata principala
 root = tk.Tk()
 
 root.title("Ultrasonic Image Enhancement")
