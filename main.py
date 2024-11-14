@@ -1,9 +1,8 @@
 import tkinter as tk
 from tkinter import filedialog
 from PIL import Image, ImageTk
-import numpy as np
 
-# Variabile globale pentru imagine si factorul de zoom
+import algoritmi
 
 start_x = 0
 start_y = 0
@@ -13,28 +12,37 @@ label_img2 = None
 img_resized2 = None
 width2 = 0
 height2 = 0
+label_width_max = 400
+label_height_max = 400
 
-label_width_max = 300
-label_height_max = 300
-
-options = ["Sobel", "Medie", "Alg3", "Alg4"]
+options = ["Sobel", "Medie", "Median", "Prewitt","Gaussian"]
 
 img_offset_x = 0
 img_offset_y = 0
 
 
-
 def apply_action(panel):
-    global image, image_tk, zoom_fact, label_image, img_resized, img2, img_tk2, label_img2, img_resized2, width2, height2, clicked
+    global image, image_tk, zoom_fact, label_image, img_resized, img2, img_tk2, label_img2, width2, height2, clicked
     if image:
-        if clicked.get() == "Sobel":
-            img2=algoritmi.filtrusobel(image)
-            img_tk2 = ImageTk.PhotoImage(img2)
+        if img2 is not None:
+            img2 = None
+            img_tk2 = None
 
+        if clicked.get() == "Sobel":
+            img2 = algoritmi.filtruSobel(image)
+        elif clicked.get() == "Medie":
+            img2 = algoritmi.filtruMedie(image)
+        elif clicked.get() == "Median":
+            img2 = algoritmi.filtruMedian(image)
+        elif clicked.get() == "Prewitt":
+            img2 = algoritmi.filtruPrewitt(image)
+        elif clicked.get() == "Gaussian":
+            img2 = algoritmi.filtruGaussian(image)
 
         if label_img2 is not None:
             label_img2.destroy()
 
+        img_tk2 = ImageTk.PhotoImage(img2)
         label_img2 = tk.Label(panel, width=label_width_max, height=label_height_max,
                               highlightbackground="black", highlightthickness=0)
         label_img2.config(image=img_tk2)
@@ -43,10 +51,9 @@ def apply_action(panel):
         label_img2.pack(side=tk.RIGHT, anchor=tk.N, padx=10, pady=10)
 
 
-# Functie pentru a incarca imaginea
 def load_action(panel):
     global image, image_tk, label_image, zoom_fact, image_resized, image_width, height, width
-    # Afiseaza un dialog pentru a selecta fisierul
+
     file_path = filedialog.askopenfilename(title="Selecteaza o imagine",
                                            filetypes=[("Image Files", "*.jpg;*.jpeg;*.png;*.gif;*.bmp")])
     if file_path:
