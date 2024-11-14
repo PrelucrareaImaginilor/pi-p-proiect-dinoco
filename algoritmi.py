@@ -41,12 +41,9 @@ def filtrusobel(img):
 
     for i in range(1, width - 1):
         for j in range(1, height - 1):
-            a=0
-            b=0
-            for k in range (-1,1):
-                for l in range (-1,1):
-                    
-            # Calculăm gradienții folosind filtrele Sobel
+
+            region = img_array[j - 1:j + 2, i - 1:i + 2]
+
             grad_x = np.sum(region * sobel_x)
             grad_y = np.sum(region * sobel_y)
 
