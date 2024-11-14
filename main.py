@@ -17,37 +17,26 @@ height2 = 0
 label_width_max = 300
 label_height_max = 300
 
-options = ["Alg1", "Alg2", "Alg3", "Alg4"]
+options = ["Sobel", "Medie", "Alg3", "Alg4"]
 
-# Variabile pentru miscarea imaginii
 img_offset_x = 0
 img_offset_y = 0
 
 
-def apply_action(panel):
-    global image, image_tk, zoom_fact, label_image, img_resized, img2, img_tk2, label_img2, img_resized2, width2, height2
-    n = 3
-    if image:
-        img_gray = image.convert("L")
-        img_array = np.array(img_gray)
-        width, height = img_array.shape
-        filtered_img_array = np.zeros_like(img_array)
 
-        for i in range(int(n / 2), int(width - n / 2) + 1):
-            for j in range(int(n / 2), int(height - n / 2) + 1):
-                window = 0
-                for k in range(-int(n / 2), int(n / 2) + 1):
-                    for l in range(-int(n / 2), int(n / 2) + 1):
-                        window += int(img_array[i + k, j + l])
-                filtered_img_array[i, j] = window / (n * n)
+def apply_action(panel):
+    global image, image_tk, zoom_fact, label_image, img_resized, img2, img_tk2, label_img2, img_resized2, width2, height2, clicked
+    if image:
+        if clicked.get() == "Sobel":
+            img2=algoritmi.filtrusobel(image)
+            img_tk2 = ImageTk.PhotoImage(img2)
+
 
         if label_img2 is not None:
             label_img2.destroy()
 
         label_img2 = tk.Label(panel, width=label_width_max, height=label_height_max,
                               highlightbackground="black", highlightthickness=0)
-        img2 = Image.fromarray(filtered_img_array.astype(np.uint8))
-        img_tk2 = ImageTk.PhotoImage(Image.fromarray(filtered_img_array.astype(np.uint8)))
         label_img2.config(image=img_tk2)
         label_img2.image = img_tk2
 
@@ -190,6 +179,8 @@ img_resized = None
 width = 0
 height = 0
 
+clicked = tk.StringVar()
+
 load = tk.Button(button_frame, text="Load Image",
                  command=lambda: load_action(root),
                  width=20, height=3)
@@ -199,10 +190,9 @@ apply = tk.Button(button_frame, text="Apply", command=lambda: apply_action(root)
 apply.pack(side=tk.RIGHT, padx=5, pady=5)
 root.bind("<MouseWheel>", zoom)
 
-clicked = tk.StringVar()
-clicked.set("Alg1")
+clicked.set("Sobel")
 drop = tk.OptionMenu(root, clicked, *options)
 drop.pack()
 
 root.mainloop()
-#1
+# 1

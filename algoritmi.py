@@ -2,9 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 from PIL import Image, ImageTk
 import numpy as np
-
-
-def filtrumedie(img, n=3):
+def filtru_medie(img, n=3):
     if img:
         img_gray = img.convert("L")
         img_array = np.array(img_gray)
@@ -20,8 +18,6 @@ def filtrumedie(img, n=3):
 
         img2 = Image.fromarray(filtered_img_array.astype(np.uint8))
         return img2
-
-
 
 def filtrusobel(img):
     img_gray = img.convert("L")
